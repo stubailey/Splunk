@@ -1,0 +1,127 @@
+Splunk Cheat Sheet
+
+Display Indexes on Splunk
+
+| eventcount summarize=false index=* | dedup index | fields index
+
+ 
+
+ 
+
+https://www.stationx.net/splunk-cheat-sheet/
+
+ 
+
+https://github.com/cravey?tab=overview&from=2021-12-01&to=2021-12-31
+
+ 
+
+ 
+
+ 
+
+Boss of the SOC
+
+https://github.com/splunk/botsv2
+
+https://github.com/splunk/botsv2
+
+ 
+
+index=botsv2
+
+ 
+
+index=botsv2 | stats count by host
+
+ 
+
+index=botsv2  earliest=08/01/2017:00:00:00  latest=08/31/2017:23:59:59 sourcetype="stream:ip"
+
+ 
+
+index=botsv2
+
+| search sourcetype="stream:ip"
+
+| stats count by src_ip
+
+ 
+
+index=botsv2
+
+| stats count by sourcetype
+
+ 
+
+index=botsv2 source="WinEventLog:Security" EventCode=4688
+
+| stats count by New_Process_Name
+
+| sort count desc
+
+ 
+
+index=botsv2 source="WinEventLog:Security" EventCode=4624
+
+| stats count by Account_Name
+
+| sort count desc
+
+ 
+
+index=botsv2 source="WinEventLog:Security" EventCode=4624
+
+| timechart count by host
+
+ 
+
+index=botsv2 source="WinEventLog:Security" EventCode=4688
+
+| stats count by New_Process_Name
+
+| sort count desc
+
+ 
+
+index=botsv2 source="WinEventLog:Security" EventCode=4688
+
+| timechart count by host
+
+ 
+
+index=botsv2 sourcetype="stream:tcp"
+
+| timechart count by src_ip
+
+ 
+
+ 
+
+index=botsv2  earliest=08/01/2017:00:00:00  latest=08/31/2017:23:59:59 sourcetype="stream:ip"
+
+| stats  count by src_ip
+
+| eventstats avg(count) as avg stdev(count) as stdev
+
+| sort count desc
+
+| eval deviation_threshold = avg+(2.5*stdev)
+
+| eval toobig=if(count>deviation_threshold,1,0)
+
+| table src_ip count deviation_threshold toobig
+
+| search toobig=1
+
+ 
+
+ 
+
+Boss of the SOC
+
+https://github.com/splunk/botsv2
+
+https://lolbas-project.github.io/#
+
+ 
